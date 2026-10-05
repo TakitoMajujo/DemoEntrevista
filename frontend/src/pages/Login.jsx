@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { api } from "../api";
+import { storage } from "../storage";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -9,7 +10,7 @@ export default function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  if (localStorage.getItem("token")) {
+  if (storage.read("token")) {
     return <Navigate to="/home" replace />;
   }
 
@@ -23,8 +24,12 @@ export default function Login() {
         method: "POST",
         body: JSON.stringify({ usuario, password }),
       });
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("nombreUsuario", data.nombreUsuario);
+      const saved =
+        storage.write("token", data.token) &&
+        storage.write("nombreUsuario", data.nombreUsuario);
+      if (!saved) {
+        throw new Error("El navegador bloqueó el almacenamiento de este sitio. Permite las cookies para localhost.");
+      }
       navigate("/home");
     } catch (err) {
       setError(err.message);

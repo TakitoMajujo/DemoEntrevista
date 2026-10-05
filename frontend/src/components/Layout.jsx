@@ -1,12 +1,13 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { storage } from "../storage";
 
 export default function Layout() {
   const navigate = useNavigate();
-  const nombreUsuario = localStorage.getItem("nombreUsuario") ?? "usuario";
+  const nombreUsuario = storage.read("nombreUsuario") ?? "usuario";
 
   function logout() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("nombreUsuario");
+    storage.remove("token");
+    storage.remove("nombreUsuario");
     navigate("/");
   }
 

@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
+import { storage } from "../storage";
 
 export default function Home() {
-  const nombreUsuario = localStorage.getItem("nombreUsuario") ?? "usuario";
+  const nombreUsuario = storage.read("nombreUsuario") ?? "usuario";
 
   return (
     <section className="page">

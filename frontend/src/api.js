@@ -1,7 +1,9 @@
+import { storage } from "./storage";
+
 const API_URL = "http://localhost:5167/api";
 
 export async function api(path, options = {}) {
-  const token = localStorage.getItem("token");
+  const token = storage.read("token");
   const headers = {
     "Content-Type": "application/json",
     ...(options.headers ?? {}),
@@ -19,8 +21,8 @@ export async function api(path, options = {}) {
   }
 
   if (response.status === 401 && path !== "/login") {
-    localStorage.removeItem("token");
-    localStorage.removeItem("nombreUsuario");
+    storage.remove("token");
+    storage.remove("nombreUsuario");
     window.location.href = "/";
     throw new Error("Sesión expirada.");
   }
